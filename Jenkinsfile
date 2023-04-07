@@ -36,7 +36,6 @@ pipeline{
                     rm tomcat-users.xml
                     rm context.xml
                     rm server.xml
-                    rm TablesService.war
                 '''
             }
         }
