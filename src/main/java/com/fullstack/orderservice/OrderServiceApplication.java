@@ -30,17 +30,6 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	@Autowired
 	private OrderLogic orderLogic;
 
-	@GetMapping(path = "/")
-	public ResponseEntity<String> defaultEndpoint(){
-		return ResponseEntity.status(HttpStatus.OK).body("Some values:" +
-				"\nCUSTOMERS_GET_ALL: " + System.getenv("CUSTOMERS_GET_ALL") +
-				"\nJDBC_USER: " + System.getenv("JDBC_USER") +
-				"\nORDERS_SUBMIT: " + System.getenv("ORDERS_SUBMIT") +
-				"\nCUSTOMERS_SERVICE_SERVICE_HOST: " + System.getenv("CUSTOMERS_SERVICE_SERVICE_HOST") +
-				"\nCUSTOMERS_SERVICE_SERVICE_PORT: " + System.getenv("CUSTOMERS_SERVICE_SERVICE_PORT") +
-				"\nPATH: " + System.getenv("Path"));
-	}
-
 	@GetMapping(path = "/getAllOrders")
 	public ResponseEntity<List<Order>> getAllOrders(){
 
