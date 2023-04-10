@@ -29,7 +29,7 @@ public class OrderLogicTests {
     }
 
     @Test
-    void submitOrdersTest(){
+    void insertOrdersTest(){
         Order newOrder = Order.builder()
                 .firstName("test")
                 .tableNumber(1)
@@ -37,5 +37,11 @@ public class OrderLogicTests {
                 .dish("some food").build();
         Order submittedOrder = orderLogic.insertOrder(orderLogic.insertOrder(newOrder));
         assert (newOrder.equals(submittedOrder));
+    }
+
+    @Test
+    void getOrderByFirstName() {
+        Order expectedOrder = Order.builder().firstName("alice").dish("coke").bill(2.01f).tableNumber(1).build();
+        
     }
 }
