@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.Optional;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
@@ -42,6 +43,8 @@ public class OrderLogicTests {
     @Test
     void getOrderByFirstName() {
         Order expectedOrder = Order.builder().firstName("alice").dish("coke").bill(2.01f).tableNumber(1).build();
-        
+
+       Optional<Order> returnedOrder = orderLogic.getOrderByFirstName("alice");
+       assert (returnedOrder.isPresent() && expectedOrder.equals(returnedOrder.get()));
     }
 }
