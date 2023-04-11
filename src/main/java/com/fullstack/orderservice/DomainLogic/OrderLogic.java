@@ -2,6 +2,7 @@ package com.fullstack.orderservice.DomainLogic;
 
 import com.fullstack.orderservice.DBAccessEntities.Order;
 import com.fullstack.orderservice.Repositories.OrderRepository;
+import com.fullstack.orderservice.Utilities.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,9 @@ public class OrderLogic {
         return orderRepository.save(order);
     }
 
-    public Optional<Order> getOrderByFirstName(String firstName){
-        return orderRepository.findByFirstName(firstName);
+    public Order getOrderByFirstName(String firstName) throws EntityNotFoundException {
+        Optional<Order> returnedOrder = orderRepository.findByFirstName(firstName);
+        if(returnedOrder.isEmpty()) throw new EntityNotFoundException("order for customer " + firstName + " not found");
+        return returnedOrder.get();
     }
 }
