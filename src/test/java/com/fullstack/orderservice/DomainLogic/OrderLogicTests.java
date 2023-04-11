@@ -25,8 +25,8 @@ public class OrderLogicTests {
         assert orders.get(3).getFirstName().equals("chuck");
         assert orders.get(4).getFirstName().equals("ed");
         assert orders.get(5).getFirstName().equals("ed");
-        assert orders.get(6).getFirstName().equals("alice");
-        assert orders.get(7).getFirstName().equals("bob");
+        assert orders.get(6).getFirstName().equals("fred");
+        assert orders.get(7).getFirstName().equals("george");
     }
 
     @Test

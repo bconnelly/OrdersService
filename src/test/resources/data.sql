@@ -11,6 +11,6 @@ VALUES ('ed', 'tacos', 5, 4.00);
 insert into orders (first_name, dish, table_number, bill)
 VALUES ('ed', 'dr p', 5, 2.01);
 insert into orders (first_name, dish, table_number, bill)
-VALUES ('alice', 'reps', 1, 0.01);
+VALUES ('fred', 'reps', 1, 0.01);
 insert into orders (first_name, dish, table_number, bill)
-VALUES ('bob', 'gains', 2, 0.01);
+VALUES ('george', 'gains', 2, 0.01);
