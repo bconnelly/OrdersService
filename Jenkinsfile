@@ -5,19 +5,22 @@ pipeline{
             args '-v /root/.m2:/root/.m2 \
                   -v /root/jenkins/restaurant-resources/:/root/jenkins/restaurant-resources/ \
                   -v /var/run/docker.sock:/var/run/docker.sock \
-                  --privileged --env KOPS_STATE_STORE=' + env.KOPS_STATE_STORE + \
-                  ' --env DOCKER_USER=' + env.DOCKER_USER + ' --env DOCKER_PASS=' + env.DOCKER_PASS
+                  --privileged --env KOPS_STATE_STORE=${KOPS_STATE_STORE} \
+                  --env DOCKER_USER=${DOCKER_USER} --env DOCKER_PASS=${DOCKER_PASS}'
             alwaysPull true
         }
+    }
+    environment{
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
     }
     stages{
         stage('maven build and test, docker build and push'){
             steps{
-                echo 'packaging and testing:'
                 sh '''
                     mvn verify
                 '''
-                stash name: 'orders-repo'
+                stash name: 'orders-repo', useDefaultExcludes: false
 
             }
         }
@@ -66,7 +69,7 @@ pipeline{
                     if [ -z "$(kops validate cluster | grep ".k8s.local is ready")" ]; then echo "failed to deploy to rc namespace" && exit 1; fi
                 '''
                 stash includes: 'Restaurant-k8s-components/orders/', name: 'k8s-components'
-                stash includes: "Restaurant-k8s-components/tests.py", name: 'tests'
+                stash includes: 'Restaurant-k8s-components/tests.py,Restaurant-k8s-components/tests.sh', name: 'tests'
             }
         }
         stage('sanity tests'){
@@ -74,7 +77,7 @@ pipeline{
                 unstash 'tests'
                 sh '''
                     ls -alF
-                    python Restaurant-k8s-components/tests.py
+                    ./Restaurant-k8s-components/tests.sh {RC_LB}
                     exit_status=$?
                     if [ "${exit_status}" -ne 0 ];
                     then
@@ -112,6 +115,19 @@ pipeline{
                 '''
             }
         }
+        stage('sanity tests - prod'){
+                    steps{
+                        unstash 'tests'
+                        sh '''
+                            ./Restaurant-k8s-components/tests.sh ${PROD_LB}
+                            exit_status=$?
+                            if [ "${exit_status}" -ne 0 ];
+                            then
+                                echo "PROD FAILURE, MANUAL INSPECTION NECESSARY - exit ${exit_status}"
+                            fi
+                            '''
+                    }
+                }
     }
     post{
         failure{
