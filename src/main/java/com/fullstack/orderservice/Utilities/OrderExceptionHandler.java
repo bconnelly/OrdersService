@@ -17,7 +17,7 @@ public class OrderExceptionHandler extends ResponseEntityExceptionHandler {
         if (exception.getMessage().isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("entity not found");
         else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getCause() + ", " + exception.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getCause() + ", entity not found | " + exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
