@@ -150,7 +150,7 @@ pipeline{
         }
         always{
             sh '''
-                docker rmi bryan949/fullstack-orders
+                docker rmi bryan949/poc-orders
                 docker image prune
             '''
 
