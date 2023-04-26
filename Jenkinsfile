@@ -149,11 +149,6 @@ pipeline{
             }
         }
         always{
-            sh '''
-                docker rmi bryan949/poc-orders
-                docker image prune
-            '''
-
             cleanWs(cleanWhenAborted: true,
                     cleanWhenFailure: true,
                     cleanWhenNotBuilt: true,
@@ -162,6 +157,11 @@ pipeline{
                     cleanupMatrixParent: true,
                     deleteDirs: true,
                     disableDeferredWipeout: true)
+
+            sh '''
+                docker rmi bryan949/poc-orders
+                docker image prune
+            '''
         }
     }
 }
