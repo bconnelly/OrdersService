@@ -33,8 +33,8 @@ pipeline{
                     cp /root/jenkins/restaurant-resources/context.xml .
                     cp /root/jenkins/restaurant-resources/server.xml .
 
-                    docker build -t bryan949/fullstack-orders .
-                    docker push bryan949/fullstack-orders:latest
+                    docker build -t bryan949/poc-orders .
+                    docker push bryan949/poc-orders:latest
 
                     rm tomcat-users.xml
                     rm context.xml
