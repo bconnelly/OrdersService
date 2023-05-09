@@ -109,6 +109,8 @@ pipeline{
                     kubectl config set-context --current --namespace prod
                     kubectl apply -f /root/jenkins/restaurant-resources/poc-secrets.yaml
                     kubectl apply -f Restaurant-k8s-components/orders/
+                    kubectl apply -f Restaurant-k8s-components/poc-config.yaml
+                    kubectl apply -f Restaurant-k8s-components/mysql-external-service.yaml
                     kubectl get deployment
                     kubectl rollout restart deployment orders-deployment
 
