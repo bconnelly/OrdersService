@@ -28,7 +28,7 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	private OrderLogic orderLogic;
 
 	@GetMapping(path = "/getAllOrders")
-	public List<Order> getAllOrders(){
+	public List<Order> getAllOrders() throws EntityNotFoundException {
 		return orderLogic.getAllOrders();
 	}
 

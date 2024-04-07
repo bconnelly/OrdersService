@@ -18,7 +18,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "native", strategy = "native")
+    @GenericGenerator(name = "native")
     @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
     @Column(name = "first_name")
@@ -29,18 +29,22 @@ public class Order {
     private Integer tableNumber;
     @Column(name = "bill")
     private Float bill;
+    @Column(name = "served")
+    private Boolean served;
 
     public String toString(){
         return "[first_name: " + firstName +
                 ", dish: " + dish +
-                ", table_number: " +
-                ", bill: " + bill + "]";
+                ", table_number: " + tableNumber +
+                ", bill: " + bill +
+                ", served: " + served + "]";
     }
 
     public boolean equals(Order order){
         return (order.firstName.equals(this.firstName) &&
                 order.dish.equals(this.dish) &&
                 order.tableNumber.equals(this.tableNumber) &&
-                order.bill.equals(this.bill));
+                order.bill.equals(this.bill) &&
+                order.served.equals(this.served));
     }
 }

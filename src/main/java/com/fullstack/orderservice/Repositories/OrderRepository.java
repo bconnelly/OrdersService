@@ -2,13 +2,15 @@ package com.fullstack.orderservice.Repositories;
 
 import com.fullstack.orderservice.DBAccessEntities.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
+    @NonNull
     List<Order> findAll();
-    Optional<Order> findByFirstName(String firstName);
-    Optional<Order> findById(Integer id);
+    Order findByFirstName(String firstName);
+    Order findOrderById(Integer id);
+    List<Order> findByServedFalse();
 
 }

@@ -19,14 +19,14 @@ public class OrderLogicTests {
     private OrderLogic orderLogic;
 
     @Test
-    void getAllOrdersTest(){
+    void getAllOrdersTest() throws EntityNotFoundException {
         List<Order> orders = orderLogic.getAllOrders();
 
         assert(orders.size() == 8);
         assert(orders.get(0).getFirstName().equals("alice"));
         assert(orders.get(1).getFirstName().equals("bob"));
-        assert(orders.get(2).getFirstName().equals("dan"));
-        assert(orders.get(3).getFirstName().equals("chuck"));
+        assert(orders.get(2).getFirstName().equals("chuck"));
+        assert(orders.get(3).getFirstName().equals("dave"));
         assert(orders.get(4).getFirstName().equals("ed"));
         assert(orders.get(5).getFirstName().equals("ed"));
         assert(orders.get(6).getFirstName().equals("fred"));
@@ -36,17 +36,18 @@ public class OrderLogicTests {
     @Test
     void insertOrdersTest(){
         Order newOrder = Order.builder()
-                .firstName("test")
+                .firstName("george")
                 .tableNumber(1)
                 .bill(12.34f)
-                .dish("some food").build();
+                .dish("some food")
+                .served(false).build();
         Order submittedOrder = orderLogic.insertOrder(orderLogic.insertOrder(newOrder));
         assert(newOrder.equals(submittedOrder));
     }
 
     @Test
     void getOrderByFirstName() throws EntityNotFoundException {
-        Order expectedOrder = Order.builder().firstName("alice").dish("coke").bill(2.01f).tableNumber(1).build();
+        Order expectedOrder = Order.builder().firstName("alice").dish("coke").bill(2.01f).tableNumber(1).served(false).build();
 
         Order returnedOrder = orderLogic.getOrderByFirstName("alice");
         assert(expectedOrder.equals(returnedOrder));
