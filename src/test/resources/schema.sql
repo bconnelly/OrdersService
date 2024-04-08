@@ -26,6 +26,5 @@ create table orders
     dish         varchar(50) not null,
     table_number int         not null,
     bill         float       not null,
-    served       bool        null default false,
-    constraint orders_ibfk_1 foreign key (first_name) references customers (first_name)
+    served       bool        null default false
 );
