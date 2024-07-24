@@ -87,8 +87,8 @@ public class OrderLogicTests {
     }
 
     @Test
-    void serveOrderNameTableTestBadOrder() throws EntityNotFoundException {
-        orderLogic.serveOrder("fake", 1);
+    void serveOrderNameTableTestBadOrder() {
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder("fake", 1));
     }
 
     @Test
