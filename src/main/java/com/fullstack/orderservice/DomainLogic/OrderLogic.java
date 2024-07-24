@@ -3,6 +3,7 @@ package com.fullstack.orderservice.DomainLogic;
 import com.fullstack.orderservice.DBAccessEntities.Order;
 import com.fullstack.orderservice.Repositories.OrderRepository;
 import com.fullstack.orderservice.Utilities.EntityNotFoundException;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class OrderLogic {
     }
 
     public List<Order> getPendingOrders() throws EntityNotFoundException {
-        List<Order> orders = orderRepository.findByServedFalse();
+        List<Order> orders = orderRepository.findByServed(true);
         if(orders.isEmpty()) throw new EntityNotFoundException("no pending orders");
         return orders;
     }
@@ -30,10 +31,28 @@ public class OrderLogic {
         return orderRepository.save(order);
     }
 
-    public Order getOrderByFirstName(String firstName) throws EntityNotFoundException {
-        Order returnedOrder = orderRepository.findByFirstName(firstName);
-        if(returnedOrder == null) throw new EntityNotFoundException("order for customer " + firstName + " not found");
+    public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
+        int recordsChanged = orderRepository.serveOrder(firstName, tableNumber);
+        if(recordsChanged == 0) throw new EntityNotFoundException();
+        orderRepository.serveOrder(firstName, tableNumber);
+    }
+
+    public void serveOrder(int id) throws EntityNotFoundException {
+        int recordsChanged = orderRepository.serveOrder(id);
+        if(recordsChanged == 0) throw new EntityNotFoundException();
+        else throw new NonUniqueResultException(recordsChanged);
+    }
+
+    public List<Order> getOrderByFirstName(String firstName) throws EntityNotFoundException {
+        List<Order> returnedOrder = orderRepository.findByFirstName(firstName);
+        if(returnedOrder == null || returnedOrder.isEmpty()) throw new EntityNotFoundException("order for customer " + firstName + " not found");
+        else if(returnedOrder.size() > 1) throw new NonUniqueResultException(returnedOrder.size());
         return returnedOrder;
     }
 
+    public Order getOrderById(int id) throws EntityNotFoundException {
+        Order returnedOrder = orderRepository.findOrderById(id);
+        if(returnedOrder == null) throw new EntityNotFoundException("order for id " + id + " not found");
+        return returnedOrder;
+    }
 }

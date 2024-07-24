@@ -19,18 +19,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "native")
-    @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
-    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "dish")
     private String dish;
-    @Column(name = "table_number")
     private Integer tableNumber;
-    @Column(name = "bill")
     private Float bill;
-    @Column(name = "served")
-    private Boolean served;
+    private Boolean served = false;
 
     public String toString(){
         return "[first_name: " + firstName +

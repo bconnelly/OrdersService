@@ -35,3 +35,5 @@ insert into orders (first_name, dish, table_number, bill, served)
 VALUES ('fred', 'dr p', 5, 12.01, true);
 insert into orders (first_name, dish, table_number, bill, served)
 VALUES ('george', 'dr p', 5, 2.11, true);
+insert into orders (first_name, dish, table_number, bill, served)
+VALUES ('harry', 'dr p', 5, 2.11, true);

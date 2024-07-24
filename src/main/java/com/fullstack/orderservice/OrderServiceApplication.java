@@ -8,10 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,29 +24,38 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	@Autowired
 	private OrderLogic orderLogic;
 
-	@GetMapping(path = "/getAllOrders")
+	@GetMapping("/getAllOrders")
 	public List<Order> getAllOrders() throws EntityNotFoundException {
 		return orderLogic.getAllOrders();
 	}
 
-	@PostMapping(path = "/insertOrder")
-	public Order insertOrder(@RequestParam(value = "firstName") String firstName,
-											 @RequestParam(value = "tableNumber")Integer tableNumber,
-											 @RequestParam(value = "dish") String dish,
-											 @RequestParam(value = "bill") Float bill){
+	@GetMapping("/getPendingOrders")
+	public List<Order> getPendingOrders() throws EntityNotFoundException{
+		return orderLogic.getPendingOrders();
+	}
 
-		Order order = Order.builder()
-				.firstName(firstName)
-				.tableNumber(tableNumber)
-				.dish(dish)
-				.bill(bill)
-				.build();
-
+	@PostMapping("/insertOrder")
+	public Order insertOrder(@RequestBody Order order){
 		return orderLogic.insertOrder(order);
 	}
 
+	@PostMapping(value = "/serveOrder")
+	public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
+		orderLogic.serveOrder(firstName, tableNumber);
+	}
+
+	@PostMapping(value = "/serveOrder/{id}")
+	public void serveOrder(@PathVariable("id") int id) throws EntityNotFoundException {
+		orderLogic.serveOrder(id);
+	}
+
 	@GetMapping("/getOrdersByFirstName")
-	public Order getOrdersByFirstName(@RequestParam(value = "firstName") String firstName) throws EntityNotFoundException {
+	public List<Order> getOrdersByFirstName(String firstName) throws EntityNotFoundException {
 		return orderLogic.getOrderByFirstName(firstName);
+	}
+
+	@GetMapping("/getOrdersById")
+	public Order getOrdersById(int id) throws EntityNotFoundException {
+		return orderLogic.getOrderById(id);
 	}
 }
