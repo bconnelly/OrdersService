@@ -5,6 +5,7 @@ import com.fullstack.orderservice.Utilities.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
@@ -18,12 +19,13 @@ public class OrderLogicTests {
     @Autowired
     private OrderLogic orderLogic;
 
+
     @Test
     void getAllOrdersTest() throws EntityNotFoundException {
         List<Order> orders = orderLogic.getAllOrders();
         System.out.println(orders.toString());
 
-        assert(orders.size() == 9);
+        assert(orders.size() == 8);
         assert(orders.get(0).getFirstName().equals("alice"));
         assert(orders.get(1).getFirstName().equals("bob"));
         assert(orders.get(2).getFirstName().equals("chuck"));
@@ -32,13 +34,12 @@ public class OrderLogicTests {
         assert(orders.get(5).getFirstName().equals("ed"));
         assert(orders.get(6).getFirstName().equals("fred"));
         assert(orders.get(7).getFirstName().equals("george"));
-        assert(orders.get(8).getFirstName().equals("harry"));
     }
 
     @Test
     void getPendingOrdersTest() throws EntityNotFoundException {
         List<Order> pendingOrders = orderLogic.getPendingOrders();
-        assert(pendingOrders.size() == 5);
+        assert(pendingOrders.size() == 4);
     }
 
     @Test
@@ -53,8 +54,13 @@ public class OrderLogicTests {
     }
 
     @Test
+    void getOrderByFirstNameInvalidNameTest() {
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderByFirstName("xyz"));
+    }
+
+    @Test
     void getOrderByIdTest() throws EntityNotFoundException {
-        Order expectedOrder = Order.builder().firstName("bob").dish("pizza").tableNumber(2).bill(5.12f).served(false).build();
+        Order expectedOrder = Order.builder().firstName("bob").dish("pizza").tableNumber(3).bill(5.12f).served(false).build();
 
         Order returnedOrder = orderLogic.getOrderById(2);
         assert(returnedOrder.equals(expectedOrder));
@@ -63,15 +69,26 @@ public class OrderLogicTests {
     }
 
     @Test
+    void getOrderByIdInvalidIdTest() {
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderById(1000));
+    }
+
+    @Test
     void insertOrdersTest(){
         Order newOrder = Order.builder()
-                .firstName("hank")
-                .tableNumber(1)
+                .firstName("bob")
+                .tableNumber(3)
                 .bill(12.34f)
                 .dish("some food")
                 .served(false).build();
-        Order submittedOrder = orderLogic.insertOrder(orderLogic.insertOrder(newOrder));
+        Order submittedOrder = orderLogic.insertOrder(newOrder);
         assert(newOrder.equals(submittedOrder));
+    }
+
+    @Test
+    void insertOrdersWrongTableTest(){
+        Order invalidOrder = Order.builder().firstName("alice").tableNumber(5).dish("abc").served(false).build();
+        assertThrows(DataIntegrityViolationException.class, () -> orderLogic.insertOrder(invalidOrder));
     }
 
     @Test
@@ -87,8 +104,8 @@ public class OrderLogicTests {
     }
 
     @Test
-    void serveOrderNameTableTestBadOrder() {
-        assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder("fake", 1));
+    void serveOrderNameTableWrongTableTest(){
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder("alice", 5));
     }
 
     @Test
@@ -99,5 +116,10 @@ public class OrderLogicTests {
         orderLogic.serveOrder("alice", 1);
         Order orderServed = orderLogic.getOrderById(1);
         assert(orderServed.getServed().equals(true));
+    }
+
+    @Test
+    void serveOrderIdBadIdTest(){
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder(1000));
     }
 }

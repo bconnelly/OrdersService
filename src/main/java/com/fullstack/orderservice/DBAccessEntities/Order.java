@@ -18,7 +18,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "native")
+    @GenericGenerator(name = "native") //TODO: this is deprecated
     private Integer id;
     private String firstName;
     private String dish;

@@ -53,9 +53,4 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	public List<Order> getOrdersByFirstName(String firstName) throws EntityNotFoundException {
 		return orderLogic.getOrderByFirstName(firstName);
 	}
-
-	@GetMapping("/getOrdersById")
-	public Order getOrdersById(int id) throws EntityNotFoundException {
-		return orderLogic.getOrderById(id);
-	}
 }

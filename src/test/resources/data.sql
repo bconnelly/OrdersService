@@ -22,18 +22,16 @@ VALUES ('george', 4, 0.23, '129 main st');
 insert into orders (first_name, dish, table_number, bill, served)
 VALUES ('alice', 'coke', 1, 2.01, false);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('bob', 'pizza', 2, 5.12, false);
+VALUES ('bob', 'pizza', 3, 5.12, false);
 insert into orders (first_name, dish, table_number, bill, served)
 VALUES ('chuck', 'salad', 3, 5.12, false);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('dave', 'burger', 4, 4.49, false);
+VALUES ('dave', 'burger', 1, 4.49, false);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('ed', 'tacos', 5, 4.00, true);
+VALUES ('ed', 'tacos', 2, 4.00, true);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('ed', 'dr p', 5, 2.01, true);
+VALUES ('ed', 'dr p', 2, 2.01, true);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('fred', 'dr p', 5, 12.01, true);
+VALUES ('fred', 'dr p', 2, 12.01, true);
 insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('george', 'dr p', 5, 2.11, true);
-insert into orders (first_name, dish, table_number, bill, served)
-VALUES ('harry', 'dr p', 5, 2.11, true);
+VALUES ('george', 'dr p', 4, 2.11, true);

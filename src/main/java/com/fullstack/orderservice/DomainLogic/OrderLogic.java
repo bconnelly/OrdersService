@@ -5,6 +5,7 @@ import com.fullstack.orderservice.Repositories.OrderRepository;
 import com.fullstack.orderservice.Utilities.EntityNotFoundException;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,20 +28,20 @@ public class OrderLogic {
         return orders;
     }
 
-    public Order insertOrder(Order order){
+    public Order insertOrder(Order order) throws DataIntegrityViolationException {
         return orderRepository.save(order);
     }
 
     public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
         int recordsChanged = orderRepository.serveOrder(firstName, tableNumber);
         if(recordsChanged == 0) throw new EntityNotFoundException();
-        orderRepository.serveOrder(firstName, tableNumber);
+        else if (recordsChanged > 1) throw new NonUniqueResultException(recordsChanged);
     }
 
     public void serveOrder(int id) throws EntityNotFoundException {
         int recordsChanged = orderRepository.serveOrder(id);
         if(recordsChanged == 0) throw new EntityNotFoundException();
-        else throw new NonUniqueResultException(recordsChanged);
+        else if (recordsChanged > 1) throw new NonUniqueResultException(recordsChanged);
     }
 
     public List<Order> getOrderByFirstName(String firstName) throws EntityNotFoundException {

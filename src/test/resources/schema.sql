@@ -15,7 +15,7 @@ create table customers
     table_number int         not null,
     cash         float       not null,
     address      varchar(50) not null,
-    constraint customers_unique_1 unique (first_name),
+    constraint customers_unique_1 unique (first_name, table_number),
     constraint customers_fk_1 foreign key (table_number) references tables(table_number)
 );
 
@@ -27,5 +27,6 @@ create table orders
     dish         varchar(50) not null,
     table_number int         not null,
     bill         float       not null,
-    served       bool        null default false
+    served       bool        null default false,
+    constraint orders_fk_1 foreign key (first_name, table_number) references customers(first_name, table_number)
 );
