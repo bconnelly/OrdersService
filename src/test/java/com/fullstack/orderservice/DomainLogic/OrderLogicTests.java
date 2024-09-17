@@ -54,8 +54,10 @@ public class OrderLogicTests {
     }
 
     @Test
-    void getOrderByFirstNameInvalidNameTest() {
-        assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderByFirstName("xyz"));
+    void getOrderByFirstNameBadNameTest() {
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderByFirstName("fakename"));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.getOrderByFirstName(null));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.getOrderByFirstName(""));
     }
 
     @Test
@@ -65,12 +67,14 @@ public class OrderLogicTests {
         Order returnedOrder = orderLogic.getOrderById(2);
         assert(returnedOrder.equals(expectedOrder));
 
-        assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderById(-1));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.getOrderById(-1));
     }
 
     @Test
-    void getOrderByIdInvalidIdTest() {
+    void getOrderByIdBadIdTest() {
         assertThrows(EntityNotFoundException.class, () -> orderLogic.getOrderById(1000));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.getOrderById(-1));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.getOrderById(0));
     }
 
     @Test
@@ -92,6 +96,16 @@ public class OrderLogicTests {
     }
 
     @Test
+    void insertOrdersBadTableTest(){
+        Order tableZero = Order.builder().firstName("alice").tableNumber(0).dish("abc").served(false).build();
+        Order tableNegative = Order.builder().firstName("alice").tableNumber(-1).dish("abc").served(false).build();
+
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.insertOrder(tableZero));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.insertOrder(tableNegative));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.insertOrder(null));
+    }
+
+    @Test
     void serveOrderNameTableTest() throws EntityNotFoundException {
         List<Order> orderToServe = orderLogic.getOrderByFirstName("alice");
         assert(orderToServe.size() == 1);
@@ -104,8 +118,17 @@ public class OrderLogicTests {
     }
 
     @Test
-    void serveOrderNameTableWrongTableTest(){
+    void serveOrderNameTableBadNamesTest(){
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder("", 1));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder(null, 1));
+        assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder("fakename", 1));
+    }
+
+    @Test
+    void serveOrderNameTableBadTableTest(){
         assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder("alice", 5));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder("alice", -1));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder("alice", 0));
     }
 
     @Test
@@ -121,5 +144,7 @@ public class OrderLogicTests {
     @Test
     void serveOrderIdBadIdTest(){
         assertThrows(EntityNotFoundException.class, () -> orderLogic.serveOrder(1000));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder(-1));
+        assertThrows(IllegalArgumentException.class, () -> orderLogic.serveOrder(0));
     }
 }
