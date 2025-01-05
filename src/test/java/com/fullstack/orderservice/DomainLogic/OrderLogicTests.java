@@ -136,7 +136,7 @@ public class OrderLogicTests {
         Order orderToServe = orderLogic.getOrderById(1);
         assert(orderToServe.getServed().equals(false));
 
-        orderLogic.serveOrder("alice", 1);
+        orderLogic.serveOrder(1);
         Order orderServed = orderLogic.getOrderById(1);
         assert(orderServed.getServed().equals(true));
     }
