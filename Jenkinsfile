@@ -115,7 +115,7 @@ pipeline{
                     kubectl get deployment
                     kubectl rollout restart deployment orders-deployment
 
-                    if [ -z "$(kops validate cluster | grep ".k8s.local is ready")" ]; then echo "PROD FAILURE"; fi
+                    if [ -z "$(kops validate cluster | grep ".k8s.local is ready")" ]; then exit 1; fi
                     sleep 3
                 '''
             }

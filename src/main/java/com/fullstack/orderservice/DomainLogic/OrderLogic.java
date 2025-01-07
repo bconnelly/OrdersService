@@ -33,8 +33,6 @@ public class OrderLogic {
         if(order.getTableNumber() < 1) throw new IllegalArgumentException("order table number is invalid");
 
         return orderRepository.save(order);
-
-
     }
 
     public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
