@@ -65,9 +65,10 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.26</version>
+			<version>1.18.36</version>
 			<scope>provided</scope>
 		</dependency>
+
 
 		<dependency>
 			<groupId>com.querydsl</groupId>
@@ -96,7 +97,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.3.2</version>
+				<version>3.4.0</version>
 				<configuration>
 					<outputDirectory>${project.build.directory}/../</outputDirectory>
 				</configuration>
