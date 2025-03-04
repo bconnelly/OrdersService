@@ -24,32 +24,32 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	@Autowired
 	private OrderLogic orderLogic;
 
-	@GetMapping("/getAllOrders")
+	@GetMapping("/order/all")
 	public List<Order> getAllOrders() throws EntityNotFoundException {
 		return orderLogic.getAllOrders();
 	}
 
-	@GetMapping("/getPendingOrders")
+	@GetMapping("/order/pending")
 	public List<Order> getPendingOrders() throws EntityNotFoundException{
 		return orderLogic.getPendingOrders();
 	}
 
-	@PostMapping("/insertOrder")
+	@PostMapping("/order/submit")
 	public Order insertOrder(@RequestBody Order order){
 		return orderLogic.insertOrder(order);
 	}
 
-	@PostMapping(value = "/serveOrder")
+	@PostMapping(value = "/order/serve")
 	public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
 		orderLogic.serveOrder(firstName, tableNumber);
 	}
 
-	@PostMapping(value = "/serveOrder/{id}")
+	@PostMapping(value = "/order/serve/{id}")
 	public void serveOrder(@PathVariable("id") int id) throws EntityNotFoundException {
 		orderLogic.serveOrder(id);
 	}
 
-	@GetMapping("/getOrdersByFirstName")
+	@GetMapping("/order/firstName")
 	public List<Order> getOrdersByFirstName(String firstName) throws EntityNotFoundException {
 		return orderLogic.getOrderByFirstName(firstName);
 	}
