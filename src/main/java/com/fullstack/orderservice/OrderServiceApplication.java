@@ -40,7 +40,7 @@ public class OrderServiceApplication extends SpringBootServletInitializer {
 	}
 
 	@PostMapping(value = "/order/serve")
-	public void serveOrder(String firstName, int tableNumber) throws EntityNotFoundException {
+	public void serveOrder(@RequestParam String firstName, @RequestParam int tableNumber) throws EntityNotFoundException {
 		orderLogic.serveOrder(firstName, tableNumber);
 	}
 
