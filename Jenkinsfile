@@ -21,9 +21,9 @@ pipeline{
                     env.GIT_SHA = sh(script: '''
                                                 git clone ${ORDERS_REPO}
                                                 cd OrdersService
-                                                git rev-parse master
+                                                git rev-parse --short HEAD
                                              ''', returnStdout: true).trim()
-                    env.MASTER_COMMIT = sh(script: 'git rev-parse --short HEAD')
+                    env.MASTER_COMMIT = sh(script: 'git rev-parse master')
                     env.PREV_IMAGE = sh(script: '''
                                                    docker pull bryan949/poc-customers:latest
                                                    docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
@@ -31,6 +31,13 @@ pipeline{
                 }
                 sh '''
                     mvn verify
+
+                    echo ${GIT_SHA}
+                    echo $GIT_SHA
+                    echo ${MASTER_COMMIT}
+                    echo $MASTER_COMMIT
+                    echo ${PREV_IMAGE}
+                    echo $PREV_IMAGE
                    '''
                 stash name: 'orders-repo', useDefaultExcludes: false
 
