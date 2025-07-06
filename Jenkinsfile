@@ -31,7 +31,7 @@ pipeline{
                     env.MASTER_COMMIT = (gitOutput =~ /MASTER_COMMIT=([a-f0-9]+)/)[0][1]
 
                     echo "MASTER_COMMIT: ${env.MASTER_COMMIT}"
-                    echo "GIT_SHA: ${emv.GIT_SHA}"
+                    echo "GIT_SHA: ${env.GIT_SHA}"
 
                     env.PREV_IMAGE = sh(script: '''
                                                 docker pull bryan949/poc-customers:latest
