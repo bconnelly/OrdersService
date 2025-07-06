@@ -19,7 +19,7 @@ pipeline{
             steps{
                 script{
                     env.GIT_SHA = sh(script: '''git clone ${ORDERS_REPO}
-                                                git cd ${ORDERS_REPO}
+                                                cd ${ORDERS_REPO}
                                                 git rev-parse master''', returnStdout: true).trim()
                 }
                 sh '''
