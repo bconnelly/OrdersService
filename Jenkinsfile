@@ -18,20 +18,26 @@ pipeline{
         stage('Capture env, maven build and test'){
             steps{
                 script{
-                    env.GIT_SHA = sh(script: '''
+                    def gitOutput = sh(script: '''
+                                                set -e
                                                 git clone ${ORDERS_REPO}
                                                 cd OrdersService
-                                                git rev-parse --short HEAD
-                                             ''', returnStdout: true).trim()
-                    env.MASTER_COMMIT = sh(script: 'git rev-parse master')
+                                                GIT_SHA=$(git rev-parse --short HEAD)
+                                                MASTER_COMMIT=$(git rev-parse master)
+                                               ''', returnStdout: true).trim()
+                    env.GIT_SHA = (gitOutput =~ /GIT_SHA=([a-f0-9]+)/)[0][1]
+                    env.MASTER_COMMIT = (gitOutput =~ /MASTER_COMMIT=([a-f0-9]+)/)[0][1]
+
+                    echo "MASTER_COMMIT: ${env.MASTER_COMMIT}"
+                    echo "GIT_SHA: ${emv.GIT_SHA}"
+
                     env.PREV_IMAGE = sh(script: '''
-                                                   docker pull bryan949/poc-customers:latest
-                                                   docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
+                                                docker pull bryan949/poc-customers:latest
+                                                docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
                                                 ''', returnStdout: true).trim()
                 }
                 sh '''
                     mvn verify
-
                     echo ${GIT_SHA}
                     echo $GIT_SHA
                     echo ${MASTER_COMMIT}
@@ -62,7 +68,7 @@ pipeline{
                 '''
             }
         }
-        stage('configure cluster connection'){
+        stage('Configure cluster connection'){
             steps{
     	        sh '''
 	                kops export kubecfg --admin --name poc.k8s.local
@@ -71,7 +77,7 @@ pipeline{
 	            '''
             }
         }
-        stage('deploy services to cluster - rc namespace'){
+        stage('Deploy services to cluster - rc namespace'){
             steps{
                 sh '''
                     git clone https://github.com/bconnelly/Restaurant-k8s-components.git
@@ -95,7 +101,7 @@ pipeline{
                 stash includes: 'Restaurant-k8s-components/tests.py,Restaurant-k8s-components/tests.py', name: 'tests'
             }
         }
-        stage('sanity tests'){
+        stage('Sanity tests'){
             steps{
                 unstash 'tests'
                 sh '''
@@ -117,7 +123,7 @@ pipeline{
                 }
             }
         }
-        stage('deploy to cluster - prod namespace'){
+        stage('Deploy to cluster - prod namespace'){
             steps{
                 unstash 'k8s-components'
 
