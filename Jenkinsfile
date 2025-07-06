@@ -18,9 +18,16 @@ pipeline{
         stage('maven build and test'){
             steps{
                 script{
-                    env.GIT_SHA = sh(script: '''git clone ${ORDERS_REPO}
+                    env.GIT_SHA = sh(script: '''
+                                                git clone ${ORDERS_REPO}
                                                 cd OrdersService
-                                                git rev-parse master''', returnStdout: true).trim()
+                                                git rev-parse master
+                                             ''', returnStdout: true).trim()
+                    env.MASTER_COMMIT = sh(script: 'git rev-parse --short HEAD')
+                    env.PREV_IMAGE = sh(script: '''
+                                                   docker pull bryan949/poc-customers:latest
+                                                   docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
+                                                ''', returnStdout: true).trim()
                 }
                 sh '''
                     mvn verify
@@ -132,15 +139,10 @@ pipeline{
             unstash 'orders-repo'
             withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_USERPASS', gitToolName: 'Default')]) {
                 sh '''
-                    git checkout rc
+                    echo "Reverting git master branch to previous commit ${MASTER_COMMIT}"
                     git checkout master
-                    git rev-list --left-right master...rc | while read line
-                    do
-                        COMMIT=$(echo $line | sed 's/[^0-9a-f]*//g')
-                        git revert $COMMIT --no-edit
-                    done
-                    git merge rc
-                    git push origin master
+                    git reset --hard ${MASTER_COMMIT}
+                    git push origin master --force
                 '''
             }
         }
@@ -155,8 +157,9 @@ pipeline{
                     disableDeferredWipeout: true)
 
             sh '''
-                docker rmi bryan949/poc-orders
-                docker image prune
+                docker rmi bryan949/poc-orders:${GIT_SHA} || true
+                docker rmi bryan949/poc-orders:latest || true
+                docker image prune || true
             '''
         }
     }
