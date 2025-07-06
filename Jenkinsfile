@@ -17,12 +17,14 @@ pipeline{
     stages{
         stage('maven build and test'){
             steps{
-                env.GIT_SHA = sh 'git rev-parse --short HEAD'
+                script{
+                    env.GIT_SHA = sh(script: '''git clone ${ORDERS_REPO}
+                                                git rev-parse master''', returnStdout: true).trim()
+                }
                 sh '''
                     mvn verify
                    '''
                 stash name: 'orders-repo', useDefaultExcludes: false
-
             }
         }
         stage('build and push docker image'){
