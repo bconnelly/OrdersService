@@ -26,6 +26,7 @@ pipeline{
                     mvn verify
                    '''
                 stash name: 'orders-repo', useDefaultExcludes: false
+
             }
         }
         stage('build and push docker image'){
