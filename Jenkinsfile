@@ -17,9 +17,10 @@ pipeline{
     stages{
         stage('maven build and test'){
             steps{
+                env.GIT_SHA = sh 'git rev-parse --short HEAD'
                 sh '''
                     mvn verify
-                '''
+                   '''
                 stash name: 'orders-repo', useDefaultExcludes: false
 
             }
@@ -32,7 +33,9 @@ pipeline{
                     cp /root/jenkins/restaurant-resources/context.xml .
                     cp /root/jenkins/restaurant-resources/server.xml .
 
-                    docker build -t bryan949/poc-orders .
+                    docker build -t bryan949/poc-orders:${GIT_SHA} .
+                    docker tag bryan949/poc-orders:${GIT_SHA} bryan949/poc-orders:latest
+                    docker push bryan949/poc-orders:${GIT_SHA}
                     docker push bryan949/poc-orders:latest
 
                     rm tomcat-users.xml
