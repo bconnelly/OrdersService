@@ -34,7 +34,7 @@ pipeline{
                     echo "GIT_SHA: ${env.GIT_SHA}"
 
                     env.PREV_IMAGE = sh(script: '''
-                                                docker pull bryan949/poc-customers:latest
+                                                docker pull bryan949/poc-customers:latest >> /dev/null
                                                 docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
                                                 ''', returnStdout: true).trim()
                     echo "PREV_IMAGE: ${env.PREV_IMAGE}"
