@@ -82,7 +82,8 @@ pipeline{
                     exit_status=$?
                     if [ "${exit_status}" -ne 0 ];
                     then
-                        echo "exit ${exit_status}"
+                        echo "Tests failed. Exit status: ${exit_status}"
+                        exit ${exit_status}
                     fi
                 '''
                 withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_USERPASS', gitToolName: 'Default')]) {
