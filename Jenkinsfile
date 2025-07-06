@@ -24,6 +24,8 @@ pipeline{
                                                 cd OrdersService
                                                 GIT_SHA=$(git rev-parse --short HEAD)
                                                 MASTER_COMMIT=$(git rev-parse master)
+                                                echo "GIT_SHA=${GIT_SHA}"
+                                                echo "MASTER_COMMIT=${MASTER_COMMIT}"
                                                ''', returnStdout: true).trim()
                     env.GIT_SHA = (gitOutput =~ /GIT_SHA=([a-f0-9]+)/)[0][1]
                     env.MASTER_COMMIT = (gitOutput =~ /MASTER_COMMIT=([a-f0-9]+)/)[0][1]
@@ -38,12 +40,7 @@ pipeline{
                 }
                 sh '''
                     mvn verify
-                    echo ${GIT_SHA}
-                    echo $GIT_SHA
-                    echo ${MASTER_COMMIT}
-                    echo $MASTER_COMMIT
-                    echo ${PREV_IMAGE}
-                    echo $PREV_IMAGE
+
                    '''
                 stash name: 'orders-repo', useDefaultExcludes: false
 
