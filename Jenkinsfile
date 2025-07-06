@@ -20,6 +20,7 @@ pipeline{
                 script{
                     def gitOutput = sh(script: '''
                                                 set -e
+                                                rm -rf OrdersService || true
                                                 git clone ${ORDERS_REPO}
                                                 cd OrdersService
                                                 GIT_SHA=$(git rev-parse --short HEAD)
