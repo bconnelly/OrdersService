@@ -15,7 +15,7 @@ pipeline{
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
     }
     stages{
-        stage('maven build and test'){
+        stage('Capture env, maven build and test'){
             steps{
                 script{
                     env.GIT_SHA = sh(script: '''
@@ -36,7 +36,7 @@ pipeline{
 
             }
         }
-        stage('build and push docker image'){
+        stage('Build and push docker image'){
             steps{
                 unstash 'orders-repo'
                 sh '''
@@ -115,7 +115,6 @@ pipeline{
                 unstash 'k8s-components'
 
                 sh '''
-                    exit 1
                     find Restaurant-k8s-components/orders -type f -path ./Restaurant-k8s-components/orders -prune -o -name *.yaml -print | while read line; do yq -i '.metadata.namespace = "prod"' $line > /dev/null; done
                     yq -i '.metadata.namespace = "prod"' /root/jenkins/restaurant-resources/poc-secrets.yaml > /dev/null
                     yq -i '.metadata.namespace = "prod"' Restaurant-k8s-components/poc-config.yaml > /dev/null
