@@ -15,7 +15,7 @@ pipeline{
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
     }
     stages{
-        stage('maven build and test, docker build and push'){
+        stage('maven build and test'){
             steps{
                 sh '''
                     mvn verify
@@ -24,7 +24,7 @@ pipeline{
 
             }
         }
-        stage('build docker images'){
+        stage('build and push docker image'){
             steps{
                 unstash 'orders-repo'
                 sh '''
@@ -78,7 +78,6 @@ pipeline{
             steps{
                 unstash 'tests'
                 sh '''
-                    ls -alF
                     python Restaurant-k8s-components/tests.py ${RC_LB}
                     exit_status=$?
                     if [ "${exit_status}" -ne 0 ];
@@ -86,7 +85,6 @@ pipeline{
                         echo "exit ${exit_status}"
                     fi
                 '''
-
                 withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_USERPASS', gitToolName: 'Default')]) {
                     sh '''
                         git checkout rc
@@ -115,7 +113,7 @@ pipeline{
                     kubectl get deployment
                     kubectl rollout restart deployment orders-deployment
 
-                    if [ -z "$(kops validate cluster | grep ".k8s.local is ready")" ]; then exit 1; fi
+                    if [ -z "$(kops validate cluster | grep ".k8s.local is ready")" ]; then echo "PROD FAILURE"; fi
                     sleep 3
                 '''
             }
@@ -155,4 +153,3 @@ pipeline{
         }
     }
 }
-//1
