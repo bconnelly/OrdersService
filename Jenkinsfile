@@ -37,10 +37,10 @@ pipeline{
                                                 docker pull bryan949/poc-customers:latest
                                                 docker inspect --format='{{index .RepoDigests 0}}' bryan949/poc-customers:latest
                                                 ''', returnStdout: true).trim()
+                    echo "PREV_IMAGE: ${env.PREV_IMAGE}"
                 }
                 sh '''
                     mvn verify
-
                    '''
                 stash name: 'orders-repo', useDefaultExcludes: false
 
